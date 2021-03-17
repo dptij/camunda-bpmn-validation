@@ -1,16 +1,14 @@
 package at.jit.camundabpmnvalidation;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.camunda.bpm.engine.ProcessEngineConfiguration;
+import org.camunda.bpm.engine.ParseException;
 import org.camunda.bpm.engine.impl.cfg.BpmnParseFactory;
 import org.camunda.bpm.engine.impl.cfg.DefaultBpmnParseFactory;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.el.ExpressionManager;
 import org.camunda.bpm.engine.impl.interceptor.CommandInterceptor;
 import org.camunda.bpm.engine.impl.persistence.entity.DeploymentEntity;
-import org.camunda.bpm.model.bpmn.Bpmn;
-import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.junit.Assert;
 import org.junit.Test;
 import org.camunda.bpm.engine.impl.bpmn.parser.BpmnParser;
 import org.camunda.bpm.engine.impl.bpmn.parser.BpmnParse;
@@ -22,10 +20,13 @@ import java.io.IOException;
 import java.util.Collection;
 
 public class ValidationTest {
-
     @Test
     public void test1() throws IOException {
-        try (FileInputStream inputStream = FileUtils.openInputStream(new File("src/test/resources/diagram_1.bpmn"))) {
+        validateFile("src/test/resources/diagram_1.bpmn");
+    }
+
+    private void validateFile(String fileName) throws IOException {
+        try (FileInputStream inputStream = FileUtils.openInputStream(new File(fileName))) {
             ExpressionManager expressionManager = new ExpressionManager();
 
             ProcessEngineConfigurationImpl processEngineConfiguration = new ProcessEngineConfigurationImpl() {
@@ -48,9 +49,10 @@ public class ValidationTest {
                     .sourceInputStream(inputStream)
                     .deployment(new DeploymentEntity());
             bpmnParse.execute();
-            System.out.println("test");
         }
-
-
+        catch (final ParseException exception) {
+            exception.printStackTrace();
+            Assert.fail();
+        }
     }
 }
