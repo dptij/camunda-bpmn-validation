@@ -47,12 +47,13 @@ public class ValidationTest {
             BpmnParser bpmnParser = new BpmnParser(expressionManager, bpmnParseFactory);
             BpmnParse bpmnParse = bpmnParser.createParse()
                     .sourceInputStream(inputStream)
-                    .deployment(new DeploymentEntity());
+                    .deployment(new DeploymentEntity())
+                    .name(fileName);
             bpmnParse.execute();
         }
         catch (final ParseException exception) {
             exception.printStackTrace();
-            Assert.fail();
+            Assert.fail("BPMN is invalid, see log output for details");
         }
     }
 }
