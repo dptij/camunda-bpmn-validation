@@ -1,0 +1,6 @@
+.idea/ 
+camunda-bpmn-validation.iml 
+target/ 
+camunda-bpmn-validation.iml
+target
+.DS_Store
