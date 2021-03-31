@@ -52,7 +52,6 @@ public class ValidationTest {
             bpmnParse.execute();
         }
         catch (final ParseException exception) {
-            //exception.printStackTrace();
             Assert.fail(exception.getMessage());
         }
     }
