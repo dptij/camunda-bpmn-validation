@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1hjmjtx" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="ResearchForWritingProjectProcess" name="Research for Writing Project" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="DESC" label="Description of the artifact to process" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1yg1igr</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Activity_0aspbqa" name="Is there any more work to do?" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="researcher">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="MORE_WORK_NECESSARY" label="Is more work necessary?" type="boolean" defaultValue="true" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_02nkdfx</bpmn:incoming>
+      <bpmn:outgoing>Flow_090wule</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1yg1igr" sourceRef="StartEvent_1" targetRef="Activity_1t8kvj2" />
+    <bpmn:endEvent id="Event_02vo55k" camunda:asyncBefore="true">
+      <bpmn:incoming>Flow_1rkllg2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_090wule" sourceRef="Activity_0aspbqa" targetRef="Gateway_1irbx9c" />
+    <bpmn:sequenceFlow id="Flow_0gyq9dz" sourceRef="Activity_02e1if6" targetRef="Activity_0foipuw" />
+    <bpmn:serviceTask id="Activity_02e1if6" name="Initialize SESSIONS_COUNT and MORE_WORK_NECESSARY variables" camunda:asyncBefore="true" camunda:class="com.dpisarenko.procman2020.delegates.InitializeVariables">
+      <bpmn:incoming>Flow_0xykfdu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gyq9dz</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0nh099r" sourceRef="Activity_0foipuw" targetRef="Activity_0s91w5q" />
+    <bpmn:callActivity id="Activity_0foipuw" name="Process a part of the artifact and publish the results in a blog" camunda:asyncBefore="true" calledElement="PublishToDpisarenkoComProcess">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0gyq9dz</bpmn:incoming>
+      <bpmn:incoming>Flow_068a61n</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nh099r</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_02nkdfx" sourceRef="Activity_0s91w5q" targetRef="Activity_0aspbqa" />
+    <bpmn:serviceTask id="Activity_0s91w5q" name="Increment SESSIONS_COUNT variable" camunda:asyncBefore="true" camunda:class="com.dpisarenko.procman2020.delegates.IncrementSessionsCountVariable">
+      <bpmn:incoming>Flow_0nh099r</bpmn:incoming>
+      <bpmn:outgoing>Flow_02nkdfx</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_1irbx9c" name="Are we finished?" camunda:asyncBefore="true" default="Flow_068a61n">
+      <bpmn:incoming>Flow_090wule</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rkllg2</bpmn:outgoing>
+      <bpmn:outgoing>Flow_068a61n</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1rkllg2" sourceRef="Gateway_1irbx9c" targetRef="Event_02vo55k">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${MORE_WORK_NECESSARY==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_068a61n" sourceRef="Gateway_1irbx9c" targetRef="Activity_0foipuw" />
+    <bpmn:sequenceFlow id="Flow_0xykfdu" sourceRef="Activity_1t8kvj2" targetRef="Activity_02e1if6" />
+    <bpmn:serviceTask id="Activity_1t8kvj2" name="Set the business key" camunda:asyncBefore="true" camunda:class="com.dpisarenko.procman2020.delegates.ResearchForWritingProjectProcessSetBusinessKey">
+      <bpmn:incoming>Flow_1yg1igr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xykfdu</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ResearchForWritingProjectProcess">
+      <bpmndi:BPMNEdge id="Flow_0xykfdu_di" bpmnElement="Flow_0xykfdu">
+        <di:waypoint x="320" y="207" />
+        <di:waypoint x="380" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_068a61n_di" bpmnElement="Flow_068a61n">
+        <di:waypoint x="980" y="182" />
+        <di:waypoint x="980" y="80" />
+        <di:waypoint x="590" y="80" />
+        <di:waypoint x="590" y="167" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rkllg2_di" bpmnElement="Flow_1rkllg2">
+        <di:waypoint x="1005" y="207" />
+        <di:waypoint x="1092" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02nkdfx_di" bpmnElement="Flow_02nkdfx">
+        <di:waypoint x="760" y="207" />
+        <di:waypoint x="800" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nh099r_di" bpmnElement="Flow_0nh099r">
+        <di:waypoint x="620" y="207" />
+        <di:waypoint x="660" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gyq9dz_di" bpmnElement="Flow_0gyq9dz">
+        <di:waypoint x="480" y="207" />
+        <di:waypoint x="520" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_090wule_di" bpmnElement="Flow_090wule">
+        <di:waypoint x="900" y="207" />
+        <di:waypoint x="955" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yg1igr_di" bpmnElement="Flow_1yg1igr">
+        <di:waypoint x="188" y="207" />
+        <di:waypoint x="220" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="189" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gc3gko_di" bpmnElement="Activity_0aspbqa">
+        <dc:Bounds x="800" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_02vo55k_di" bpmnElement="Event_02vo55k">
+        <dc:Bounds x="1092" y="189" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0frchud_di" bpmnElement="Activity_02e1if6">
+        <dc:Bounds x="380" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ylr6ms_di" bpmnElement="Activity_0foipuw">
+        <dc:Bounds x="520" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i8966r_di" bpmnElement="Activity_0s91w5q">
+        <dc:Bounds x="660" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1irbx9c_di" bpmnElement="Gateway_1irbx9c" isMarkerVisible="true">
+        <dc:Bounds x="955" y="182" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="939" y="239" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1141x36_di" bpmnElement="Activity_1t8kvj2">
+        <dc:Bounds x="220" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

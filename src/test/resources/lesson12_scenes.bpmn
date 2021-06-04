@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1kpxrf2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="Lesson12OutlineSceneProcess" name="Lesson 12, Outline Scene" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="PROJECT" label="Project" type="string" defaultValue="WN" />
+          <camunda:formField id="SCENE" label="Scene:" type="string" defaultValue="sc" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_0my4zk7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0my4zk7" sourceRef="StartEvent_1" targetRef="Activity_0wvhyov" />
+    <bpmn:userTask id="Activity_1e505bk" name="Outline the scene on paper" camunda:asyncBefore="true">
+      <bpmn:documentation>After you are finished with this task, please transfer the results from paper to Clojure IMMEDIATELY.
+
+
+Do not create another paper outline before you have transferred the first one to Clojure.</bpmn:documentation>
+      <bpmn:incoming>Flow_0ycohe2</bpmn:incoming>
+      <bpmn:outgoing>Flow_107n87k</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_107n87k" sourceRef="Activity_1e505bk" targetRef="Activity_0o4g97n" />
+    <bpmn:userTask id="Activity_0o4g97n" name="Capture the scene in Clojure" camunda:asyncBefore="true">
+      <bpmn:incoming>Flow_107n87k</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cb9x2x</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_0v2lxdq">
+      <bpmn:incoming>Flow_0cb9x2x</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0cb9x2x" sourceRef="Activity_0o4g97n" targetRef="Event_0v2lxdq" />
+    <bpmn:sequenceFlow id="Flow_0ycohe2" sourceRef="Activity_0wvhyov" targetRef="Activity_1e505bk" />
+    <bpmn:serviceTask id="Activity_0wvhyov" name="Set the business key" camunda:asyncBefore="true" camunda:class="com.dpisarenko.procman2020.delegates.GenerateBusinessKeyForLesson12SceneOutliningProcess">
+      <bpmn:incoming>Flow_0my4zk7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ycohe2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_04jpe0o">
+      <bpmn:text>Once you've outlined the scene on paper, start capturing it in Clojure IMMEDIATELY thereafter.
+
+Don't pile up scene outlines on paper.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1gv8wbw" sourceRef="Activity_0o4g97n" targetRef="TextAnnotation_04jpe0o" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Lesson12OutlineSceneProcess">
+      <bpmndi:BPMNShape id="TextAnnotation_04jpe0o_di" bpmnElement="TextAnnotation_04jpe0o">
+        <dc:Bounds x="580" y="80" width="210" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0ycohe2_di" bpmnElement="Flow_0ycohe2">
+        <di:waypoint x="360" y="247" />
+        <di:waypoint x="420" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cb9x2x_di" bpmnElement="Flow_0cb9x2x">
+        <di:waypoint x="680" y="247" />
+        <di:waypoint x="742" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_107n87k_di" bpmnElement="Flow_107n87k">
+        <di:waypoint x="520" y="247" />
+        <di:waypoint x="580" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0my4zk7_di" bpmnElement="Flow_0my4zk7">
+        <di:waypoint x="215" y="247" />
+        <di:waypoint x="260" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mrp576_di" bpmnElement="Activity_1e505bk">
+        <dc:Bounds x="420" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zl51uf_di" bpmnElement="Activity_0o4g97n">
+        <dc:Bounds x="580" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0v2lxdq_di" bpmnElement="Event_0v2lxdq">
+        <dc:Bounds x="742" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1p5zplq_di" bpmnElement="Activity_0wvhyov">
+        <dc:Bounds x="260" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1gv8wbw_di" bpmnElement="Association_1gv8wbw">
+        <di:waypoint x="630" y="207" />
+        <di:waypoint x="630" y="170" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

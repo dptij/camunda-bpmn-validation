@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0hwh819" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="PublishToDpisarenkoComProcess" name="Publish to dpisarenko.com" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="DESC" label="Description" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_06b9vbc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_06b9vbc" sourceRef="StartEvent_1" targetRef="Activity_0lbnpxq" />
+    <bpmn:userTask id="Activity_0lbnpxq" name="Create issue in BitBucket" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="publisher">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="BITBUCKET_ISSUE_NR" label="Issue number in Bitbucket (must be a number, must not start with &#34;I-&#34;, i. e. enter 42 instead of &#34;I-42&#34;)" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_06b9vbc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vk6ewl</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_1rs9wy1">
+      <bpmn:incoming>Flow_0api94r</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0vk6ewl" sourceRef="Activity_0lbnpxq" targetRef="Activity_0xzl8me" />
+    <bpmn:sequenceFlow id="Flow_1qov6qs" sourceRef="Activity_0xzl8me" targetRef="Activity_10r36pq" />
+    <bpmn:serviceTask id="Activity_0xzl8me" name="Update business key" camunda:asyncBefore="true" camunda:class="com.dpisarenko.procman2020.delegates.PublishToDpisarenkoComProcessUpdateBusinessKey">
+      <bpmn:incoming>Flow_0vk6ewl</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qov6qs</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_019p8a0" sourceRef="Activity_10r36pq" targetRef="Activity_01ljoqj" />
+    <bpmn:userTask id="Activity_10r36pq" name="Create local feature branch" camunda:asyncBefore="true" camunda:candidateGroups="publisher">
+      <bpmn:incoming>Flow_1qov6qs</bpmn:incoming>
+      <bpmn:outgoing>Flow_019p8a0</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1u3lsj3" sourceRef="Activity_01ljoqj" targetRef="Activity_0p3hjqc" />
+    <bpmn:userTask id="Activity_01ljoqj" name="Update the version number in Hugo code" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="publisher">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="NEW_VERSION" label="New Version of the Hugo page" type="string" defaultValue="1." />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_019p8a0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1u3lsj3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1wxggv7" sourceRef="Activity_0p3hjqc" targetRef="Activity_057rp0b" />
+    <bpmn:userTask id="Activity_0p3hjqc" name="Add changes to the site in local Hugo and test them" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="publisher">
+      <bpmn:incoming>Flow_1u3lsj3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wxggv7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_16ekbpk" sourceRef="Activity_057rp0b" targetRef="Activity_1ane6qs" />
+    <bpmn:userTask id="Activity_057rp0b" name="Push changes to BitBucket" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="publisher">
+      <bpmn:incoming>Flow_1wxggv7</bpmn:incoming>
+      <bpmn:outgoing>Flow_16ekbpk</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_02yto16" sourceRef="Activity_1ane6qs" targetRef="Activity_1v53t9g" />
+    <bpmn:userTask id="Activity_1ane6qs" name="Create pull request" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="publisher">
+      <bpmn:incoming>Flow_16ekbpk</bpmn:incoming>
+      <bpmn:outgoing>Flow_02yto16</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0wbm3du" sourceRef="Activity_1v53t9g" targetRef="Activity_16uye0h" />
+    <bpmn:userTask id="Activity_1v53t9g" name="Merge pull request in BitBucket" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="publisher">
+      <bpmn:incoming>Flow_02yto16</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wbm3du</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0api94r" sourceRef="Activity_16uye0h" targetRef="Event_1rs9wy1" />
+    <bpmn:userTask id="Activity_16uye0h" name="Verify that changes were deployed to Netlify" camunda:asyncBefore="true" camunda:assignee="dp" camunda:candidateGroups="publisher">
+      <bpmn:incoming>Flow_0wbm3du</bpmn:incoming>
+      <bpmn:outgoing>Flow_0api94r</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_0dqe4vu">
+      <bpmn:text>Result of this process is the issue number</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_06xnvbx" sourceRef="Activity_0lbnpxq" targetRef="TextAnnotation_0dqe4vu" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PublishToDpisarenkoComProcess">
+      <bpmndi:BPMNEdge id="Flow_0api94r_di" bpmnElement="Flow_0api94r">
+        <di:waypoint x="660" y="710" />
+        <di:waypoint x="722" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wbm3du_di" bpmnElement="Flow_0wbm3du">
+        <di:waypoint x="510" y="710" />
+        <di:waypoint x="560" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02yto16_di" bpmnElement="Flow_02yto16">
+        <di:waypoint x="370" y="710" />
+        <di:waypoint x="410" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16ekbpk_di" bpmnElement="Flow_16ekbpk">
+        <di:waypoint x="610" y="490" />
+        <di:waypoint x="610" y="560" />
+        <di:waypoint x="220" y="560" />
+        <di:waypoint x="220" y="710" />
+        <di:waypoint x="270" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wxggv7_di" bpmnElement="Flow_1wxggv7">
+        <di:waypoint x="510" y="450" />
+        <di:waypoint x="560" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1u3lsj3_di" bpmnElement="Flow_1u3lsj3">
+        <di:waypoint x="370" y="450" />
+        <di:waypoint x="410" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_019p8a0_di" bpmnElement="Flow_019p8a0">
+        <di:waypoint x="630" y="287" />
+        <di:waypoint x="630" y="340" />
+        <di:waypoint x="220" y="340" />
+        <di:waypoint x="220" y="450" />
+        <di:waypoint x="270" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qov6qs_di" bpmnElement="Flow_1qov6qs">
+        <di:waypoint x="520" y="247" />
+        <di:waypoint x="580" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vk6ewl_di" bpmnElement="Flow_0vk6ewl">
+        <di:waypoint x="370" y="247" />
+        <di:waypoint x="420" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06b9vbc_di" bpmnElement="Flow_06b9vbc">
+        <di:waypoint x="215" y="247" />
+        <di:waypoint x="270" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ewyqio_di" bpmnElement="Activity_0lbnpxq">
+        <dc:Bounds x="270" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rs9wy1_di" bpmnElement="Event_1rs9wy1">
+        <dc:Bounds x="722" y="692" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0t9z5k0_di" bpmnElement="Activity_0xzl8me">
+        <dc:Bounds x="420" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qmvrmc_di" bpmnElement="Activity_10r36pq">
+        <dc:Bounds x="580" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12filvi_di" bpmnElement="Activity_01ljoqj">
+        <dc:Bounds x="270" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kfpwet_di" bpmnElement="Activity_0p3hjqc">
+        <dc:Bounds x="410" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0izri9i_di" bpmnElement="Activity_057rp0b">
+        <dc:Bounds x="560" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03qqfoq_di" bpmnElement="Activity_1ane6qs">
+        <dc:Bounds x="270" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08odllp_di" bpmnElement="Activity_1v53t9g">
+        <dc:Bounds x="410" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pl372z_di" bpmnElement="Activity_16uye0h">
+        <dc:Bounds x="560" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0dqe4vu_di" bpmnElement="TextAnnotation_0dqe4vu">
+        <dc:Bounds x="270" y="80" width="100" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_06xnvbx_di" bpmnElement="Association_06xnvbx">
+        <di:waypoint x="320" y="207" />
+        <di:waypoint x="320" y="134" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
