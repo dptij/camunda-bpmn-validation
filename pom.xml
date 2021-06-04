@@ -4,7 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+<<<<<<< HEAD
     <groupId>at.jit</groupId>
+=======
+    <groupId>com.dpisarenko</groupId>
+>>>>>>> d80962d86300b02b55ca8e1fe96fd9211509bd52
     <artifactId>camunda-bpmn-validation</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -24,7 +28,10 @@
             <artifactId>camunda-bpmn-model</artifactId>
             <version>7.14.0</version>
         </dependency>
+<<<<<<< HEAD
 
+=======
+>>>>>>> d80962d86300b02b55ca8e1fe96fd9211509bd52
         <dependency>
             <groupId>org.camunda.bpm</groupId>
             <artifactId>camunda-engine</artifactId>
@@ -35,12 +42,5 @@
             <artifactId>commons-io</artifactId>
             <version>2.8.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>3.11.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-
 </project>
